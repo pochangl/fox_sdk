@@ -58,4 +58,8 @@ def load_command(data: str):
     text = m.group(1)
     command, content = text.split(',', 1)
 
-    return FoxToAICommand(command=command, content=content, data=content.split(','))
+    return FoxToAICommand(
+        command=command,
+        content=content,
+        data=content.split(','),
+    )
