@@ -1,6 +1,21 @@
 from dataclasses import dataclass
 from enum import Enum
 import re
+from typing import Iterable
+
+
+class Player(Enum):
+    BLACK = 'B'
+    WHITE = 'W'
+
+    @classmethod
+    def from_color(cls, color: str):
+        if color == Player.BLACK.value:
+            return Player.BLACK
+        elif color == Player.WHITE.value:
+            return Player.WHITE
+        else:
+            raise Exception('unknown color {}'.format(color))
 
 
 class FoxToAICommands(Enum):
@@ -50,6 +65,38 @@ class FoxToAICommand(Command):
     data: 'list[str]'
 
 
+@dataclass
+class Move:
+    index: int
+    x: int
+    y: int
+    player: Player
+
+
+class StatusCommand(FoxToAICommand):
+    @property
+    def is_playing(self):
+        return self.data[0] == '1'
+
+    @property
+    def color(self) -> Player:
+        if self.data[0] == Player.BLACK:
+            return Player.BLACK
+        else:
+            return Player.WHITE
+
+    @property
+    def moves(self) -> 'Iterable[Move]':
+        for move in self.data[2:]:
+            index, x, y, color = move.split('^')
+            yield Move(int(index), int(x), int(y), Player.from_color(color))
+
+
+commands = {
+    FoxToAICommands.STATUS.value: StatusCommand
+}
+
+
 def load_command(data: str):
     assert isinstance(data, str), 'must be str instance'
     assert verify_checksum(data), 'invalid checksum'
@@ -58,8 +105,15 @@ def load_command(data: str):
     text = m.group(1)
     command, content = text.split(',', 1)
 
-    return FoxToAICommand(
-        command=command,
-        content=content,
-        data=content.split(','),
-    )
+    if command in commands:
+        return commands[command](
+            command=command,
+            content=content,
+            data=content.split(','),
+        )
+    else:
+        return FoxToAICommand(
+            command=command,
+            content=content,
+            data=content.split(','),
+        )

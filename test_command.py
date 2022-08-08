@@ -1,4 +1,9 @@
-from command import FoxToAICommand, load_command, get_checksum, verify_checksum
+from command import FoxToAICommand, Player, StatusCommand, load_command, get_checksum, verify_checksum
+
+
+def hydrate(data: str):
+    cksum = get_checksum(data)
+    return '${}*{}\r\n'.format(data, cksum)
 
 
 def test_get_checksum():
@@ -18,3 +23,17 @@ def test_load_command():
     assert command.command == 'FASTATUS'
     assert command.content == '0'
     assert command.data == ['0']
+
+
+def test_load_status():
+    command: StatusCommand = load_command(
+        hydrate('FASTATUS,1,W,1^12^11^B'))
+    assert command.is_playing
+
+    moves = list(command.moves)
+    assert len(moves) == 1
+    [move] = moves
+    assert move.index == 1
+    assert move.player == Player.BLACK
+    assert move.x == 12
+    assert move.y == 11
