@@ -36,6 +36,7 @@ class Server(ContextDecorator):
 
     def __exit__(self, *args):
         self.conn.close()
+        self.socket.close()
         self.started = False
 
     def __aiter__(self):
