@@ -1,4 +1,5 @@
-from command import FAMOVE, FACommand, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
+from datetime import timedelta
+from command import FAMOVE, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
 
 
 def hydrate(data: str):
@@ -52,3 +53,13 @@ def test_move():
 
     assert command.is_AI == True
     assert command.move == Move(step=2, player=Player.WHITE, x=3, y=2)
+
+
+def test_rule():
+    command = load_command("$FARULE,19,1200,30,3,650,1^3^2^B*2D\r\n")
+    assert command.size == 19
+    assert command.duration == timedelta(seconds=1200)
+    assert command.byo_yomi_duration == timedelta(seconds=30)
+    assert command.byo_yomi_count == 3
+    assert command.komi == 6.5
+    assert list(command.handicap_moves) == [Move(step=1, x=3, y=2, player=Player.BLACK)]

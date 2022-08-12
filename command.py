@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import timedelta
 from enum import Enum
 import re
 from typing import Iterable
@@ -94,8 +95,7 @@ class FASTATUS(FACommand):
 
     @property
     def moves(self) -> 'Iterable[Move]':
-        for move in self.data[2:]:
-            yield Move.from_str(move)
+        yield from map(Move.from_str, self.data[2:])
 
 
 class FAMOVE(FACommand):
@@ -112,9 +112,36 @@ class FAMOVE(FACommand):
         return Move.from_str(self.data[2])
 
 
+class FARULE(FACommand):
+    @property
+    def size(self):
+        return int(self.data[0])
+
+    @property
+    def duration(self):
+        return timedelta(seconds=int(self.data[1]))
+
+    @property
+    def byo_yomi_duration(self):
+        return timedelta(seconds=int(self.data[2]))
+
+    @property
+    def byo_yomi_count(self):
+        return int(self.data[3])
+
+    @property
+    def komi(self):
+        return int(self.data[4]) / 100
+
+    @property
+    def handicap_moves(self):
+        yield from map(Move.from_str, self.data[5:])
+
+
 commands = {
     FACommands.STATUS.value: FASTATUS,
     FACommands.MOVE.value: FAMOVE,
+    FACommands.RULE.value: FARULE,
 }
 
 
