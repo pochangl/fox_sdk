@@ -1,5 +1,5 @@
 from datetime import timedelta
-from command import FAMOVE, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
+from command import FAMOVE, FARESULT, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
 
 
 def hydrate(data: str):
@@ -63,3 +63,10 @@ def test_rule():
     assert command.byo_yomi_count == 3
     assert command.komi == 6.5
     assert list(command.handicap_moves) == [Move(step=1, x=3, y=2, player=Player.BLACK)]
+
+
+def test_result():
+    command = load_command('$FARESULT,W+550*6E\r\n')
+    assert isinstance(command, FARESULT)
+    assert command.winner == Player.WHITE
+    assert command.score == 5.5

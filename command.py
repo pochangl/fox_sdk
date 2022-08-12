@@ -140,10 +140,21 @@ class FARULE(FACommand):
         yield from map(Move.from_str, self.data[5:])
 
 
+class FARESULT(FACommand):
+    @property
+    def winner(self):
+        return Player.from_color(self.data[0][0])
+
+    @property
+    def score(self):
+        return int(self.data[0][2:]) / 100
+
+
 commands = {
     FACommands.STATUS.value: FASTATUS,
     FACommands.MOVE.value: FAMOVE,
     FACommands.RULE.value: FARULE,
+    FACommands.RESULT.value: FARESULT,
 }
 
 
