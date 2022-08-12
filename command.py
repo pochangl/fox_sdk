@@ -18,7 +18,7 @@ class Player(Enum):
             raise Exception('unknown color {}'.format(color))
 
 
-class FoxToAICommands(Enum):
+class FACommands(Enum):
     STATUS = 'FASTATUS'
     MOVE = 'FAMOVE'
     SKIP = 'FASKIP'
@@ -28,7 +28,7 @@ class FoxToAICommands(Enum):
     SCORE = 'FASCORE'
 
 
-class AIToFoxCommands(Enum):
+class AFCommands(Enum):
     PLAY = 'AFPLAY'
     STATUS = 'AFSTATUS'
     SKIP = 'AFSKIP'
@@ -65,40 +65,56 @@ class Command:
 
 
 @dataclass
-class FoxToAICommand(Command):
-    command: FoxToAICommands
+class FACommand(Command):
+    command: FACommands
     data: 'list[str]'
 
 
 @dataclass
 class Move:
-    index: int
+    step: int
     x: int
     y: int
     player: Player
 
+    @staticmethod
+    def from_str(string: str) -> 'Move':
+        index, x, y, color = string.split('^')
+        return Move(int(index), int(x), int(y), Player.from_color(color))
 
-class StatusCommand(FoxToAICommand):
+
+class FASTATUS(FACommand):
     @property
     def is_playing(self):
         return self.data[0] == '1'
 
     @property
     def color(self) -> Player:
-        if self.data[0] == Player.BLACK:
-            return Player.BLACK
-        else:
-            return Player.WHITE
+        return Player.from_color(self.data[0])
 
     @property
     def moves(self) -> 'Iterable[Move]':
         for move in self.data[2:]:
-            index, x, y, color = move.split('^')
-            yield Move(int(index), int(x), int(y), Player.from_color(color))
+            yield Move.from_str(move)
+
+
+class FAMOVE(FACommand):
+    @property
+    def is_AI(self) -> bool:
+        return self.data[0] == '1'
+
+    @property
+    def AI_player(self) -> Player:
+        return Player.from_color(self.data[1])
+
+    @property
+    def move(self) -> Move:
+        return Move.from_str(self.data[2])
 
 
 commands = {
-    FoxToAICommands.STATUS.value: StatusCommand
+    FACommands.STATUS.value: FASTATUS,
+    FACommands.MOVE.value: FAMOVE,
 }
 
 
@@ -117,7 +133,7 @@ def load_command(data: str):
             data=content.split(','),
         )
     else:
-        return FoxToAICommand(
+        return FACommand(
             command=command,
             content=content,
             data=content.split(','),
