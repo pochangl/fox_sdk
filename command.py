@@ -164,12 +164,23 @@ class FATIMELEFT(FACommand):
         return int(self.data[2])
 
 
+class FASKIP(FACommand):
+    @property
+    def is_AI(self):
+        return self.data[1] == 1
+
+    @property
+    def AI_player(self):
+        return Player.from_color(self.data[1])
+
+
 commands = {
     FACommands.STATUS.value: FASTATUS,
     FACommands.MOVE.value: FAMOVE,
     FACommands.RULE.value: FARULE,
     FACommands.RESULT.value: FARESULT,
     FACommands.TIME_LEFT.value: FATIMELEFT,
+    FACommands.SKIP.value: FASKIP,
 }
 
 

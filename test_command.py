@@ -1,5 +1,5 @@
 from datetime import timedelta
-from command import FAMOVE, FARESULT, FATIMELEFT, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
+from command import FAMOVE, FARESULT, FASKIP, FATIMELEFT, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
 
 
 def hydrate(data: str):
@@ -78,3 +78,10 @@ def test_timeleft():
     assert command.duration == timedelta(seconds=1196)
     assert command.byo_yomi_duration == timedelta(seconds=30)
     assert command.byo_yomi_count == 3
+
+
+def test_skip():
+    command = load_command('$FASKIP,0,W*00\r\n')
+    assert isinstance(command, FASKIP)
+    assert not command.is_AI
+    assert command.AI_player == Player.WHITE
