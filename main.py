@@ -13,7 +13,6 @@ async def stdin(reader, server: Server):
     async for data in reader:
         print('outgoing', data)
         server.send(command.encode('AFSTATUS'))
-        print('sent')
 
 
 async def connect_stdin():
@@ -45,6 +44,6 @@ async def main():
                 if data == b'':
                     return
                 infile.write(data.decode())
-                print('incoming', data)
+                print(data)
 
 asyncio.run(main())
