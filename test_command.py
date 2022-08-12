@@ -1,4 +1,4 @@
-from command import FoxToAICommand, Player, StatusCommand, load_command, get_checksum, verify_checksum
+from command import FoxToAICommand, Player, StatusCommand, encode, load_command, get_checksum, verify_checksum
 
 
 def hydrate(data: str):
@@ -37,3 +37,8 @@ def test_load_status():
     assert move.player == Player.BLACK
     assert move.x == 12
     assert move.y == 11
+
+
+def test_encode():
+    encoded = encode('AFSTATUS')
+    assert encoded == b'$AFSTATUS*13\r\n'

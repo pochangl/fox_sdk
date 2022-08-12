@@ -36,6 +36,11 @@ class AIToFoxCommands(Enum):
     SCORE = 'AFSCORE'
 
 
+def encode(data: str):
+    checksum = get_checksum(data)
+    return '${}*{}\r\n'.format(data, checksum).encode()
+
+
 def get_checksum(data: str):
     assert isinstance(data, str), 'must be str instance'
     sum = 0
