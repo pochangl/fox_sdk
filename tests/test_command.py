@@ -51,7 +51,7 @@ def test_move():
     assert isinstance(command, FAMOVE)
     assert command.AI_player == Player.BLACK
 
-    assert command.is_AI == True
+    assert command.is_AI
     assert command.move == Move(step=2, player=Player.WHITE, x=3, y=2)
 
 
