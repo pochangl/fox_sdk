@@ -1,5 +1,5 @@
 from datetime import timedelta
-from command import FAMOVE, FARESULT, FASKIP, FATIMELEFT, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
+from command import FAMOVE, FARESULT, FASKIP, FATIMELEFT, AFCommands, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
 
 
 def hydrate(data: str):
@@ -85,3 +85,8 @@ def test_skip():
     assert isinstance(command, FASKIP)
     assert not command.is_AI
     assert command.AI_player == Player.WHITE
+
+
+def test_af_play():
+    command = AFCommands.play(Player.BLACK, Move(step=1, x=12, y=11, player=Player.BLACK))
+    assert command == b'$AFPLAY,B,1^12^11^B*6F\r\n'

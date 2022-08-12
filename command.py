@@ -36,6 +36,10 @@ class AFCommands(Enum):
     GIVE_UP = 'AFGIVEUP'
     SCORE = 'AFSCORE'
 
+    @staticmethod
+    def play(ai_player: Player, move: 'Move'):
+        return encode('AFPLAY,{},{}'.format(ai_player.value, move.to_str()))
+
 
 def encode(data: str):
     checksum = get_checksum(data)
@@ -84,6 +88,9 @@ class Move:
     def from_str(string: str) -> 'Move':
         index, x, y, color = string.split('^')
         return Move(int(index), int(x), int(y), Player.from_color(color))
+
+    def to_str(self):
+        return '{}^{}^{}^{}'.format(self.step, self.x, self.y, self.player.value)
 
 
 class FASTATUS(FACommand):
