@@ -14,7 +14,7 @@ def test_get_checksum():
 
 def test_verify_checksum():
     assert verify_checksum('$FASTATUS,0*0F\r\n')
-    assert not verify_checksum('$FASTATUS,0*0E\r\n')
+    assert not verify_checksum('$FASTATUS,0*0E\r\n', raise_exception=False)
 
 
 def test_load_status():

@@ -50,12 +50,14 @@ def get_checksum(data: str):
     return hex(sum)[2:].upper().zfill(2)
 
 
-def verify_checksum(data: str):
+def verify_checksum(data: str, raise_exception=False):
     assert isinstance(data, str), 'must be str instance'
     m = re.search(r'^\$(.+)\*([0-9A-F]{2})\r\n$', data)
 
     checksum1 = get_checksum(m.group(1))
     checksum2 = m.group(2)
+    if raise_exception and checksum1 != checksum2:
+        raise Exception('invalid checksum {} != {}'.format(checksum1, checksum2))
     return checksum1 == checksum2
 
 
@@ -147,7 +149,7 @@ commands = {
 
 def load_command(data: str):
     assert isinstance(data, str), 'must be str instance'
-    assert verify_checksum(data), 'invalid checksum'
+    verify_checksum(data)
     m = re.search(r'^\$(.+)\*([0-9A-F]{2})\r\n$', data)
 
     text = m.group(1)
