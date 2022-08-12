@@ -95,3 +95,8 @@ def test_af_play():
 def test_af_skip():
     command = AFCommands.skip(Player.WHITE)
     assert command == b'$AFSKIP,W*7D\r\n'
+
+
+def test_af_give_up():
+    command = AFCommands.give_up(Player.WHITE)
+    assert command == b'$AFGIVEUP,W*64\r\n'

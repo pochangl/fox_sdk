@@ -44,6 +44,10 @@ class AFCommands(Enum):
     def skip(player: Player):
         return encode('AFSKIP,{}'.format(player.value))
 
+    @staticmethod
+    def give_up(player: Player):
+        return encode('AFGIVEUP,{}'.format(player.value))
+
 
 def encode(data: str):
     checksum = get_checksum(data)
