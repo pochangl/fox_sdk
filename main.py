@@ -1,16 +1,19 @@
 from contextlib import asynccontextmanager
+import datetime
 import sys
 import asyncio
+import command
 from server import Server
 
 ip = '0.0.0.0'
-port = 8000
+port = 8001
 
 
 async def stdin(reader, server: Server):
     async for data in reader:
         print('outgoing', data)
-        server.send(data)
+        server.send(command.encode('AFSTATUS'))
+        print('sent')
 
 
 async def connect_stdin():
@@ -36,10 +39,12 @@ async def start_std(server: Server):
 async def main():
     server = Server(ip=ip, port=port)
     async with start_std(server):
-        with server as stream:
+        print('server started')
+        with server as stream, open('{}.game'.format(datetime.datetime.now().isoformat()), 'w') as infile:
             async for data in stream:
                 if data == b'':
                     return
+                infile.write(data.decode())
                 print('incoming', data)
 
 asyncio.run(main())
