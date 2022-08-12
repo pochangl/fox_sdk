@@ -1,5 +1,5 @@
 from datetime import timedelta
-from command import FAMOVE, FARESULT, FASKIP, FATIMELEFT, AFCommands, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
+from fox_sdk.command import FAMOVE, FARESULT, FASKIP, FATIMELEFT, AFCommands, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
 
 
 def hydrate(data: str):
