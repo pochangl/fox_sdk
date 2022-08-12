@@ -2,8 +2,8 @@ from contextlib import asynccontextmanager
 import datetime
 import sys
 import asyncio
-import command
-from server import Server
+import fox_sdk.command as command
+from fox_sdk.server import Server
 
 ip = '0.0.0.0'
 port = 8001
