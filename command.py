@@ -150,11 +150,26 @@ class FARESULT(FACommand):
         return int(self.data[0][2:]) / 100
 
 
+class FATIMELEFT(FACommand):
+    @property
+    def duration(self):
+        return timedelta(seconds=int(self.data[0]))
+
+    @property
+    def byo_yomi_duration(self):
+        return timedelta(seconds=int(self.data[1]))
+
+    @property
+    def byo_yomi_count(self):
+        return int(self.data[2])
+
+
 commands = {
     FACommands.STATUS.value: FASTATUS,
     FACommands.MOVE.value: FAMOVE,
     FACommands.RULE.value: FARULE,
     FACommands.RESULT.value: FARESULT,
+    FACommands.TIME_LEFT.value: FATIMELEFT,
 }
 
 

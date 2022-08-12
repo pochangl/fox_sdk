@@ -1,5 +1,5 @@
 from datetime import timedelta
-from command import FAMOVE, FARESULT, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
+from command import FAMOVE, FARESULT, FATIMELEFT, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
 
 
 def hydrate(data: str):
@@ -70,3 +70,11 @@ def test_result():
     assert isinstance(command, FARESULT)
     assert command.winner == Player.WHITE
     assert command.score == 5.5
+
+
+def test_timeleft():
+    command = load_command('$FATIMELEFT,1196,30,3*1A\r\n')
+    assert isinstance(command, FATIMELEFT)
+    assert command.duration == timedelta(seconds=1196)
+    assert command.byo_yomi_duration == timedelta(seconds=30)
+    assert command.byo_yomi_count == 3
