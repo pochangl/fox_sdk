@@ -40,6 +40,10 @@ class AFCommands(Enum):
     def play(ai_player: Player, move: 'Move'):
         return encode('AFPLAY,{},{}'.format(ai_player.value, move.to_str()))
 
+    @staticmethod
+    def skip(player: Player):
+        return encode('AFSKIP,{}'.format(player.value))
+
 
 def encode(data: str):
     checksum = get_checksum(data)

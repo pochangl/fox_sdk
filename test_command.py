@@ -90,3 +90,8 @@ def test_skip():
 def test_af_play():
     command = AFCommands.play(Player.BLACK, Move(step=1, x=12, y=11, player=Player.BLACK))
     assert command == b'$AFPLAY,B,1^12^11^B*6F\r\n'
+
+
+def test_af_skip():
+    command = AFCommands.skip(Player.WHITE)
+    assert command == b'$AFSKIP,W*7D\r\n'
