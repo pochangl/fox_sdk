@@ -10,6 +10,6 @@ setup(
     author='Charlie Lee',
     description=DESCRIPTION,
     long_description=LONG_DESCRIPTION,
-    packages=find_packages(),
+    packages=['fox_sdk'],
     install_requires=['asgiref'],
 )
