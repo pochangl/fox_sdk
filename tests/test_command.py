@@ -1,5 +1,5 @@
 from datetime import timedelta
-from fox_sdk.command import FAMOVE, FARESULT, FASKIP, FATIMELEFT, AFCommands, Move, Player, FASTATUS, encode, load_command, get_checksum, verify_checksum
+from fox_sdk.command import FAMOVE, FARESULT, FASKIP, FATIMELEFT, AFCommands, Move, Player, FASTATUS, encode, load_command, get_checksum, load_commands, verify_checksum
 
 
 def hydrate(data: str):
@@ -100,3 +100,13 @@ def test_af_skip():
 def test_af_give_up():
     command = AFCommands.give_up(Player.WHITE)
     assert command == b'$AFGIVEUP,W*64\r\n'
+
+
+def test_load_commands():
+    str1 = '$FASKIP,0,W*00\r\n'
+    str2 = '$FATIMELEFT,1196,30,3*1A\r\n'
+    commands1 = list(load_commands(str1 + str2))
+
+    commands2 = [load_command(str1), load_command(str2)]
+
+    assert commands1 == commands2

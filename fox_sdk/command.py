@@ -219,3 +219,9 @@ def load_command(data: str):
             content=content,
             data=content.split(','),
         )
+
+
+def load_commands(data: str):
+    matches = re.findall(r'([^\r\n]*\r\n)', data)
+    for command in matches:
+        yield load_command(command)
