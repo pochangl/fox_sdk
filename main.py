@@ -6,7 +6,7 @@ import fox_sdk.command as command
 from fox_sdk.server import Server
 
 ip = '0.0.0.0'
-port = 8001
+port = 8000
 
 
 async def stdin(reader, server: Server):
