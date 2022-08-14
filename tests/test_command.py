@@ -1,5 +1,5 @@
 from datetime import timedelta
-from fox_sdk.command import FAMOVE, FARESULT, FASKIP, FATIMELEFT, AFCommands, Move, Player, FASTATUS, encode, load_command, get_checksum, load_commands, verify_checksum
+from fox_sdk.command import FAMOVE, FARESULT, FASKIP, FATIMELEFT, AFCommands, FANoop, Move, Player, FASTATUS, encode, load_command, get_checksum, load_commands, verify_checksum
 
 
 def hydrate(data: str):
@@ -53,6 +53,11 @@ def test_move():
 
     assert command.is_AI
     assert command.move == Move(step=2, player=Player.WHITE, x=3, y=2)
+
+
+def test_move_n():
+    command = load_command('$FAMOVE,0,W,0^0^0^N*7D\r\n')
+    assert isinstance(command, FANoop)
 
 
 def test_rule():

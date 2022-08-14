@@ -8,13 +8,16 @@ from typing import Iterable
 class Player(Enum):
     BLACK = 'B'
     WHITE = 'W'
+    NONE = 'N'
 
     @classmethod
-    def from_color(cls, color: str):
+    def from_color(cls, color: str) -> 'Player | None':
         if color == Player.BLACK.value:
             return Player.BLACK
         elif color == Player.WHITE.value:
             return Player.WHITE
+        elif color == Player.NONE.value:
+            return None
         else:
             raise Exception('unknown color {}'.format(color))
 
@@ -64,7 +67,7 @@ def get_checksum(data: str):
 
 def verify_checksum(data: str, raise_exception=False):
     assert isinstance(data, str), 'must be str instance'
-    m = re.search(r'^\$(.+)\*([0-9A-F]{2})\r\n$', data)
+    m = re.search(r'^\$(.+)\*([0-9A-F]{2})[\r\n]+$', data)
 
     checksum1 = get_checksum(m.group(1))
     checksum2 = m.group(2)
@@ -84,6 +87,9 @@ class FACommand(Command):
     command: FACommands
     data: 'list[str]'
 
+    def is_valid(self):
+        return True
+
 
 @dataclass
 class Move:
@@ -99,6 +105,11 @@ class Move:
 
     def to_str(self):
         return '{}^{}^{}^{}'.format(self.step, self.x, self.y, self.player.value)
+
+
+class FANoop(FACommand):
+    # command that should skip
+    pass
 
 
 class FASTATUS(FACommand):
@@ -127,6 +138,9 @@ class FAMOVE(FACommand):
     @property
     def move(self) -> Move:
         return Move.from_str(self.data[2])
+
+    def is_valid(self):
+        return bool(self.move.player)
 
 
 class FARULE(FACommand):
@@ -202,17 +216,21 @@ commands = {
 def load_command(data: str):
     assert isinstance(data, str), 'must be str instance'
     verify_checksum(data)
-    m = re.search(r'^\$(.+)\*([0-9A-F]{2})\r\n$', data)
+    m = re.search(r'^\$(.+)\*([0-9A-F]{2})[\r\n]+$', data)
 
     text = m.group(1)
     command, content = text.split(',', 1)
 
     if command in commands:
-        return commands[command](
+        cmd = commands[command](
             command=command,
             content=content,
             data=content.split(','),
         )
+        if not cmd.is_valid():
+            return FANoop(command, content=content, data=content.split(','))
+        else:
+            return cmd
     else:
         return FACommand(
             command=command,
@@ -222,6 +240,6 @@ def load_command(data: str):
 
 
 def load_commands(data: str):
-    matches = re.findall(r'([^\r\n]*\r\n)', data)
+    matches = re.findall(r'([^\r\n]*[\r\n]+)', data)
     for command in matches:
         yield load_command(command)
