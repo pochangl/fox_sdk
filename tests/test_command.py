@@ -24,6 +24,7 @@ def test_load_status():
 
     moves = list(command.moves)
     assert isinstance(command, FASTATUS)
+    assert command.AI == Player.WHITE
     assert len(moves) == 1
     [move] = moves
     assert move.step == 1

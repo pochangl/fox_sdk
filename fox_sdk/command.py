@@ -118,8 +118,8 @@ class FASTATUS(FACommand):
         return self.data[0] == '1'
 
     @property
-    def color(self) -> Player:
-        return Player.from_color(self.data[0])
+    def AI(self) -> Player:
+        return Player.from_color(self.data[1])
 
     @property
     def moves(self) -> 'Iterable[Move]':
