@@ -190,7 +190,7 @@ class FATIMELEFT(FACommand):
 class FASKIP(FACommand):
     @property
     def is_AI(self):
-        return self.data[1] == 1
+        return self.data[0] == '1'
 
     @property
     def AI_player(self):

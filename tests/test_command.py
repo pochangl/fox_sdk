@@ -88,6 +88,13 @@ def test_skip():
     assert command.AI_player == Player.WHITE
 
 
+def test_skip_2():
+    command = load_command('$FASKIP,1,W*00\r\n')
+    assert isinstance(command, FASKIP)
+    assert command.is_AI
+    assert command.AI_player == Player.WHITE
+
+
 def test_af_play():
     command = AFCommands.play(Player.BLACK, Move(step=1, x=12, y=11, player=Player.BLACK))
     assert command == b'$AFPLAY,B,1^12^11^B*6F\r\n'
