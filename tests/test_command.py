@@ -56,11 +56,6 @@ def test_move():
     assert command.move == Move(step=2, player=Player.WHITE, x=3, y=2)
 
 
-def test_move_n():
-    command = load_command('$FAMOVE,0,W,0^0^0^N*7D\r\n')
-    assert isinstance(command, FANoop)
-
-
 def test_rule():
     command = load_command("$FARULE,19,1200,30,3,650,1^3^2^B*2D\r\n")
     assert command.size == 19

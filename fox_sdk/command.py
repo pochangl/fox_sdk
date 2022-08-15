@@ -17,7 +17,7 @@ class Player(Enum):
         elif color == Player.WHITE.value:
             return Player.WHITE
         elif color == Player.NONE.value:
-            return None
+            return 'N'
         else:
             raise Exception('unknown color {}'.format(color))
 
@@ -87,9 +87,6 @@ class FACommand(Command):
     command: FACommands
     data: 'list[str]'
 
-    def is_valid(self):
-        return True
-
 
 @dataclass
 class Move:
@@ -138,9 +135,6 @@ class FAMOVE(FACommand):
     @property
     def move(self) -> Move:
         return Move.from_str(self.data[2])
-
-    def is_valid(self):
-        return bool(self.move.player)
 
 
 class FARULE(FACommand):
@@ -227,10 +221,7 @@ def load_command(data: str):
             content=content,
             data=content.split(','),
         )
-        if not cmd.is_valid():
-            return FANoop(command, content=content, data=content.split(','))
-        else:
-            return cmd
+        return cmd
     else:
         return FACommand(
             command=command,
