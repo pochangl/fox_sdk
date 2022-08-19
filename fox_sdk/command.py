@@ -80,12 +80,17 @@ def verify_checksum(data: str, raise_exception=False):
 class Command:
     command: str
     content: str
+    data: 'list[str]'
 
 
 @dataclass
 class FACommand(Command):
     command: FACommands
-    data: 'list[str]'
+
+
+@dataclass
+class AFCommand(Command):
+    command: AFCommands
 
 
 @dataclass
@@ -197,6 +202,16 @@ class FASKIP(FACommand):
         return Player.from_color(self.data[1])
 
 
+class AFPLAY(AFCommand):
+    @property
+    def AI_player(self):
+        return Player.from_color(self.data[0])
+
+    @property
+    def move(self) -> Move:
+        return Move.from_str(self.data[1])
+
+
 commands = {
     FACommands.STATUS.value: FASTATUS,
     FACommands.MOVE.value: FAMOVE,
@@ -204,6 +219,7 @@ commands = {
     FACommands.RESULT.value: FARESULT,
     FACommands.TIME_LEFT.value: FATIMELEFT,
     FACommands.SKIP.value: FASKIP,
+    AFCommands.PLAY.value: AFPLAY,
 }
 
 
