@@ -225,7 +225,7 @@ commands = {
 
 def load_command(data: str):
     assert isinstance(data, str), 'must be str instance'
-    verify_checksum(data)
+    verify_checksum(data, raise_exception=True)
     m = re.search(r'^\$(.+)\*([0-9A-F]{2})[\r\n]+$', data)
 
     text = m.group(1)

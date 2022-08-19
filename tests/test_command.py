@@ -82,14 +82,14 @@ def test_timeleft():
 
 
 def test_skip():
-    command = load_command('$FASKIP,0,W*00\r\n')
+    command = load_command('$FASKIP,0,W*61\r\n')
     assert isinstance(command, FASKIP)
     assert not command.is_AI
     assert command.AI_player == Player.WHITE
 
 
 def test_skip_2():
-    command = load_command('$FASKIP,1,W*00\r\n')
+    command = load_command('$FASKIP,1,W*60\r\n')
     assert isinstance(command, FASKIP)
     assert command.is_AI
     assert command.AI_player == Player.WHITE
@@ -111,7 +111,7 @@ def test_af_give_up():
 
 
 def test_load_commands():
-    str1 = '$FASKIP,0,W*00\r\n'
+    str1 = '$FASKIP,0,W*61\r\n'
     str2 = '$FATIMELEFT,1196,30,3*1A\r\n'
     commands1 = list(load_commands(str1 + str2))
 
@@ -121,7 +121,7 @@ def test_load_commands():
 
 
 def test_af_play():
-    command = load_command("$AFPLAY,B,2^3^2^W*73\r\n")
+    command = load_command("$AFPLAY,B,2^3^2^W*7B\r\n")
     assert isinstance(command, AFPLAY)
     assert command.AI_player == Player.BLACK
     assert command.move == Move(step=2, player=Player.WHITE, x=3, y=2)
